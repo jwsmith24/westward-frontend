@@ -8,46 +8,45 @@ export interface Adventurer {
 }
 
 /**
- * Hook to fetch all adventurers to the backend. Handles loading state and errors.
+ * Hook to manage the list of adventurers. Handles loading state and errors.
  */
 export function useAdventurers() {
   const [adventurers, setAdventurers] = useState<Adventurer[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    const controller = new AbortController();
-    const signal = controller.signal;
+  async function fetchAdventurers() {
+    setLoading(true);
+    try {
+      const response = await fetch("http://localhost:8080/api/adventurers");
 
-    const fetchAdventurers = async () => {
-      try {
-        const response = await fetch("http://localhost:8080/api/adventurers", {
-          signal,
-        });
+      if (!response.ok) throw new Error(`Status: ${response.status}`);
 
-        if (!response.ok) throw new Error(`Status: ${response.status}`);
-
-        const data = await response.json();
-        console.log("Adventurers received!", data);
-        setAdventurers(data);
-        setError(null); // clear any existing error on success
-      } catch (error) {
-        if (error instanceof Error && error.name !== "AbortError") {
-          setError(error.message);
-        } else {
-          setError("An unknown error occurred while fetching adventurers.");
-        }
-      } finally {
-        setLoading(false);
+      const data = await response.json();
+      console.log("Adventurers received!", data);
+      setAdventurers(data);
+      setError(null); // clear any existing error on success
+    } catch (error) {
+      if (error instanceof Error && error.name !== "AbortError") {
+        setError(error.message);
+      } else {
+        setError("An unknown error occurred while fetching adventurers.");
       }
-    };
+    } finally {
+      setLoading(false);
+    }
+  }
 
+  useEffect(() => {
     void fetchAdventurers();
-
-    return () => {
-      controller.abort(); // cleanup function to cancel fetch request when component unmounts during a request
-    };
   }, []);
 
-  return { adventurers, loading, error };
+  /**
+   * Updates the list of adventurers after one is created.
+   */
+  function addAdventurer(newAdventurer: Adventurer) {
+    setAdventurers((prevState) => [...prevState, newAdventurer]);
+  }
+
+  return { adventurers, loading, error, addAdventurer };
 }
