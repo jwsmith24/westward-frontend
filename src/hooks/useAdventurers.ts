@@ -1,10 +1,10 @@
-import {useEffect, useState} from "react";
+import { useEffect, useState } from "react";
 
 export interface Adventurer {
   id: number;
   name: string;
   adventurerClass: "WARRIOR" | "MAGE" | "PRIEST" | "ROGUE";
-  level: number
+  level: number;
 }
 
 /**
@@ -16,24 +16,42 @@ export function useAdventurers() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    fetch("http://localhost:8080/api/adventurer")
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error("Failed to fetch adventurers")
-        }
-        return res.json();
-      })
-      .then((data) => {
+    const controller = new AbortController();
+    const signal = controller.signal;
+
+    const fetchAdventurers = async () => {
+      try {
+        const response = await fetch("http://localhost:8080/api/adventurer", {
+          signal,
+        });
+        console.log("response received", response);
+        if (!response.ok) throw new Error(`Status: ${response.status}`);
+
+        const data = await response.json();
+        console.log("Adventurers received!", data);
         setAdventurers(data);
+        setError(null); // clears any existing error on success
+      } catch (error) {
+        if (error instanceof Error && error.name !== "AbortError") {
+          console.error("Error fetching adventurers", error);
+          setError(error.message);
+        } else {
+          console.error(
+            "An unknown error occurred while fetching adventurers.",
+          );
+          setError("An unknown error occurred while fetching adventurers.");
+        }
+      } finally {
         setLoading(false);
-      })
-      .catch((error) => {
-        setError(error.message);
-        setLoading(false);
-      })
+      }
+    };
+
+    void fetchAdventurers();
+
+    return () => {
+      controller.abort(); // cleanup function to cancel fetch request when component unmounts during a request
+    };
   }, []);
 
-
-  return { adventurers, loading, error}
-
+  return { adventurers, loading, error };
 }
