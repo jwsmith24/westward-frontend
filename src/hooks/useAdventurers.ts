@@ -24,21 +24,17 @@ export function useAdventurers() {
         const response = await fetch("http://localhost:8080/api/adventurer", {
           signal,
         });
-        console.log("response received", response);
+
         if (!response.ok) throw new Error(`Status: ${response.status}`);
 
         const data = await response.json();
         console.log("Adventurers received!", data);
         setAdventurers(data);
-        setError(null); // clears any existing error on success
+        setError(null); // clear any existing error on success
       } catch (error) {
         if (error instanceof Error && error.name !== "AbortError") {
-          console.error("Error fetching adventurers", error);
           setError(error.message);
         } else {
-          console.error(
-            "An unknown error occurred while fetching adventurers.",
-          );
           setError("An unknown error occurred while fetching adventurers.");
         }
       } finally {
