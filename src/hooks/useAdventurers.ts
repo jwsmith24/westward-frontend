@@ -21,7 +21,7 @@ export function useAdventurers() {
 
     const fetchAdventurers = async () => {
       try {
-        const response = await fetch("http://localhost:8080/api/adventurer", {
+        const response = await fetch("http://localhost:8080/api/adventurers", {
           signal,
         });
 
