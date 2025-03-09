@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 
 export interface Adventurer {
   id: number;
-  name: string;
+  adventurerName: string;
   adventurerClass: "WARRIOR" | "MAGE" | "PRIEST" | "ROGUE";
   level: number;
 }
@@ -10,10 +10,13 @@ export interface Adventurer {
 /**
  * Hook to manage the list of adventurers. Handles loading state and errors.
  */
-export function useAdventurers() {
+export function useAdventurerList() {
   const [adventurers, setAdventurers] = useState<Adventurer[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  const [creating, setCreating] = useState(false);
+  const [createError, setCreateError] = useState<string | null>(null);
 
   async function fetchAdventurers() {
     setLoading(true);
@@ -37,6 +40,37 @@ export function useAdventurers() {
     }
   }
 
+  async function createAdventurer(adventurer: Partial<Adventurer>) {
+    setCreating(true);
+    setCreateError(null);
+    console.log("passed to createAdventurer", adventurer);
+    try {
+      const response = await fetch("http://localhost:8080/api/adventurers", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(adventurer),
+      });
+
+      if (!response.ok)
+        throw new Error(
+          `Failed to create new adventurer: ${response.statusText}`,
+        );
+
+      const newAdventurer = await response.json();
+      addAdventurer(newAdventurer);
+    } catch (error) {
+      setCreateError(
+        error instanceof Error
+          ? error.message
+          : "An unknown error occurred during character creation.",
+      );
+    } finally {
+      setCreating(false);
+    }
+  }
+
   useEffect(() => {
     void fetchAdventurers();
   }, []);
@@ -46,7 +80,17 @@ export function useAdventurers() {
    */
   function addAdventurer(newAdventurer: Adventurer) {
     setAdventurers((prevState) => [...prevState, newAdventurer]);
+    console.log("New adventurer added!", newAdventurer);
   }
 
-  return { adventurers, loading, error, addAdventurer, fetchAdventurers };
+  return {
+    adventurers,
+    loading,
+    error,
+    addAdventurer,
+    fetchAdventurers,
+    createAdventurer,
+    creating,
+    createError,
+  };
 }

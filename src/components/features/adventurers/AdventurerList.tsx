@@ -14,13 +14,13 @@ import {
 } from "@/components/ui/table.tsx";
 import { Button } from "@/components/ui/button.tsx";
 
-import {useNavigate} from "react-router-dom";
-import {useAdventurer} from "@/context/AdventurerContext.tsx";
+import { useNavigate } from "react-router-dom";
+import { useAdventurer } from "@/context/AdventurerContext.tsx";
 
 export default function AdventurerList() {
-  const { adventurers, loading, error, activeAdventurer, setActiveAdventurer } = useAdventurer();
+  const { adventurers, loading, error, activeAdventurer, setActiveAdventurer } =
+    useAdventurer();
   const navigate = useNavigate();
-
 
   if (loading)
     return <p className="text-center text-gray-500">Loading adventurers...</p>;
@@ -54,7 +54,7 @@ export default function AdventurerList() {
                 }`}
                 onClick={() => setActiveAdventurer(adventurer)}
               >
-                <TableCell>{adventurer.name}</TableCell>
+                <TableCell>{adventurer.adventurerName}</TableCell>
                 <TableCell>{adventurer.adventurerClass}</TableCell>
                 <TableCell>{adventurer.level}</TableCell>
               </TableRow>
@@ -63,22 +63,23 @@ export default function AdventurerList() {
         </Table>
 
         <div className={"flex gap-4 justify-end"}>
-          <Button onClick={() => {
-            setActiveAdventurer(null); // start fresh
-            navigate("/create-adventurer"); // move to character creation view
-          }}>
-          Create Adventurer
-        </Button>
+          <Button
+            onClick={() => {
+              setActiveAdventurer(null); // start fresh
+              navigate("/create-adventurer"); // move to character creation view
+            }}
+          >
+            Create Adventurer
+          </Button>
           {activeAdventurer && (
-              <Button
-                  className={"cursor-pointer"}
-                  onClick={() =>
-                      navigate("/town")
-                  }
-              >
-                Select {activeAdventurer.name}
-              </Button>
-          )}</div>
+            <Button
+              className={"cursor-pointer"}
+              onClick={() => navigate("/town")}
+            >
+              Select {activeAdventurer.adventurerName}
+            </Button>
+          )}
+        </div>
       </CardContent>
     </Card>
   );
