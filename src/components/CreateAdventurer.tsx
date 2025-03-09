@@ -46,5 +46,8 @@ export default function CreateAdventurer() {
     }
 
     console.log("character: ", activeAdventurer);
-    return (<div>Hi {activeAdventurer?.name}</div>)
+    return (<div className="container">
+
+
+    </div>)
 }

@@ -4,6 +4,7 @@ import AdventurerList from "@/components/AdventurerList.tsx";
 import { Routes, Route, BrowserRouter} from "react-router-dom";
 import CreateAdventurer from "@/components/CreateAdventurer.tsx";
 import {AdventurerProvider} from "@/context/AdventurerContext.tsx";
+import TownHub from "@/components/TownHub.tsx";
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
               <Routes>
                   <Route path={"/"} element={<AdventurerList/>}/>
                   <Route path={"/create-adventurer"} element={<CreateAdventurer/>}/>
+                  <Route path={"/town"} element={<TownHub/>}/>
               </Routes>
           </div>
       </BrowserRouter>

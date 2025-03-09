@@ -62,14 +62,18 @@ export default function AdventurerList() {
           </TableBody>
         </Table>
 
-        <div className={"flex gap-4 justify-end"}><Button>
+        <div className={"flex gap-4 justify-end"}>
+          <Button onClick={() => {
+            setActiveAdventurer(null); // start fresh
+            navigate("/create-adventurer"); // move to character creation view
+          }}>
           Create Adventurer
         </Button>
           {activeAdventurer && (
               <Button
                   className={"cursor-pointer"}
                   onClick={() =>
-                      navigate("/create-adventurer")
+                      navigate("/town")
                   }
               >
                 Select {activeAdventurer.name}
