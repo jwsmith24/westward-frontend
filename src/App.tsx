@@ -2,7 +2,7 @@ import "./index.css";
 
 import AdventurerList from "@/components/AdventurerList.tsx";
 import { Routes, Route, BrowserRouter} from "react-router-dom";
-import CreateAdventurer from "@/components/CreateAdventurer.tsx";
+import CreateAdventurerMain from "@/components/CreateAdventurerMain.tsx";
 import {AdventurerProvider} from "@/context/AdventurerContext.tsx";
 import TownHub from "@/components/TownHub.tsx";
 
@@ -17,7 +17,7 @@ function App() {
           >
               <Routes>
                   <Route path={"/"} element={<AdventurerList/>}/>
-                  <Route path={"/create-adventurer"} element={<CreateAdventurer/>}/>
+                  <Route path={"/create-adventurer"} element={<CreateAdventurerMain/>}/>
                   <Route path={"/town"} element={<TownHub/>}/>
               </Routes>
           </div>

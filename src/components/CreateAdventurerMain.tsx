@@ -1,10 +1,13 @@
 
 import {useState} from "react";
 import {useAdventurer} from "@/context/AdventurerContext.tsx";
+import {useForm} from "react-hook-form";
+import {z} from "zod";
 
-export default function CreateAdventurer() {
+export default function CreateAdventurerMain() {
 
     const {activeAdventurer} = useAdventurer();
+
 
     // form values
     const [newAdventurer, setNewAdventurer] = useState({
@@ -47,6 +50,7 @@ export default function CreateAdventurer() {
 
     console.log("character: ", activeAdventurer);
     return (<div className="container">
+
 
 
     </div>)
