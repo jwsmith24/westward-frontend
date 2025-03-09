@@ -35,7 +35,7 @@ import {
   SelectItem,
 } from "@/components/ui/select.tsx";
 
-export default function CharacterSelect() {
+export default function AdventurerList() {
   const { adventurers, loading, error, addAdventurer } = useAdventurers();
 
   const [selectedAdventurer, setSelectedAdventurer] =
