@@ -56,7 +56,12 @@ export function CreateAdventurerForm() {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className={"space-y-8"}>
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className={
+          "space-y-4 bg-slate-700 p-4 rounded-2xl text-white shadow-xl"
+        }
+      >
         <FormField
           control={form.control}
           name="adventurerName"
@@ -64,9 +69,13 @@ export function CreateAdventurerForm() {
             <FormItem>
               <FormLabel>Adventurer Name</FormLabel>
               <FormControl>
-                <Input placeholder="shadcn" {...field} />
+                <Input
+                  placeholder="Pick something PROVOCATIVE"
+                  {...field}
+                  className={"text-gray-400"}
+                />
               </FormControl>
-              <FormDescription>
+              <FormDescription className={"text-gray-300"}>
                 Choose a name for your character.
               </FormDescription>
               <FormMessage />
@@ -80,7 +89,7 @@ export function CreateAdventurerForm() {
             <FormItem>
               <FormLabel>Adventurer Class</FormLabel>
               <Select onValueChange={field.onChange} defaultValue={field.value}>
-                <FormControl>
+                <FormControl className={"cursor-pointer"}>
                   <SelectTrigger>
                     <SelectValue placeholder={"Select a class"} />
                   </SelectTrigger>
@@ -92,7 +101,7 @@ export function CreateAdventurerForm() {
                   <SelectItem value={"PRIEST"}>Priest</SelectItem>
                 </SelectContent>
               </Select>
-              <FormDescription>
+              <FormDescription className={"text-gray-300"}>
                 Your class determines your starting stats and abilities.
               </FormDescription>
               <FormMessage />
@@ -100,8 +109,8 @@ export function CreateAdventurerForm() {
           )}
         />
         {createError && <p className={"text-red-500"}>{createError}</p>}
-        <Button type="submit" disabled={creating}>
-          {creating ? "Creating..." : "Submit"}
+        <Button type="submit" disabled={creating} className={"cursor-pointer"}>
+          {creating ? "Creating..." : `Create Character`}
         </Button>
       </form>
     </Form>
