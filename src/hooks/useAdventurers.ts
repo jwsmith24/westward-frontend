@@ -14,7 +14,6 @@ export function useAdventurers() {
   const [adventurers, setAdventurers] = useState<Adventurer[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [activeAdventurer, setActiveAdventurer] = useState<Adventurer | null>(null);
 
   async function fetchAdventurers() {
     setLoading(true);
@@ -49,5 +48,5 @@ export function useAdventurers() {
     setAdventurers((prevState) => [...prevState, newAdventurer]);
   }
 
-  return { adventurers, loading, error, addAdventurer, activeAdventurer, setActiveAdventurer };
+  return { adventurers, loading, error, addAdventurer, fetchAdventurers };
 }

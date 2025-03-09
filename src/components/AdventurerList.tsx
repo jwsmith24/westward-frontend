@@ -1,5 +1,3 @@
-import { useState } from "react";
-import { useAdventurers } from "@/hooks/useAdventurers.ts";
 import {
   Card,
   CardContent,
@@ -15,71 +13,14 @@ import {
   TableRow,
 } from "@/components/ui/table.tsx";
 import { Button } from "@/components/ui/button.tsx";
-import {
-  Dialog,
-  DialogTrigger,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogFooter,
-  DialogClose,
-} from "@/components/ui/dialog.tsx";
-import { Label } from "@/components/ui/label.tsx";
-import { Input } from "@/components/ui/input.tsx";
-import {
-  Select,
-  SelectTrigger,
-  SelectValue,
-  SelectContent,
-  SelectItem,
-} from "@/components/ui/select.tsx";
+
+import {useNavigate} from "react-router-dom";
+import {useAdventurer} from "@/context/AdventurerContext.tsx";
 
 export default function AdventurerList() {
-  const { adventurers, loading, error, addAdventurer, activeAdventurer, setActiveAdventurer } = useAdventurers();
+  const { adventurers, loading, error, activeAdventurer, setActiveAdventurer } = useAdventurer();
+  const navigate = useNavigate();
 
-
-  const [newAdventurer, setNewAdventurer] = useState({
-    name: "",
-    adventurerClass: "",
-  });
-
-  const [open, setOpen] = useState(false);
-
-  async function handleCreateCharacter() {
-    if (!newAdventurer.name || !newAdventurer.adventurerClass) {
-      alert("Please enter a name and select a class.");
-      return;
-    }
-    console.log("Creating Adventurer:", newAdventurer);
-
-    try {
-      const response = await fetch("http://localhost:8080/api/adventurers", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(newAdventurer),
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to create character.");
-      }
-
-      const data = await response.json();
-      console.log("Character created!", data);
-      addAdventurer(data); // update state to immediately render
-
-      setNewAdventurer({ name: "", adventurerClass: "" }); // reset form
-      setOpen(false); // close modal
-    } catch (error) {
-      if (error instanceof Error) {
-        alert(`Character creation error: ${error.message}`);
-      } else {
-        alert("Character creation failed for an unknown reason.. try again!");
-      }
-    }
-  }
 
   if (loading)
     return <p className="text-center text-gray-500">Loading adventurers...</p>;
@@ -89,11 +30,11 @@ export default function AdventurerList() {
   }
 
   return (
-    <Card className={"w-1/3"}>
+    <Card className={"container"}>
       <CardHeader>
-        <CardTitle>Character Select</CardTitle>
+        <CardTitle className={"text-2xl"}>Character Select</CardTitle>
       </CardHeader>
-      <CardContent>
+      <CardContent className="grid grid-cols-1 gap-4">
         <Table>
           <TableHeader>
             <TableRow>
@@ -121,84 +62,19 @@ export default function AdventurerList() {
           </TableBody>
         </Table>
 
-        <div className="flex justify-end mt-4 gap-4">
-          <Dialog open={open} onOpenChange={setOpen}>
-            <DialogTrigger asChild>
-              <Button
-                variant={"secondary"}
-                className={"cursor-pointer hover:bg-gray-300 transition-colors"}
-              >
-                Create New Character
-              </Button>
-            </DialogTrigger>
-            <DialogContent className={"fixed flex flex-col"}>
-              <DialogHeader>
-                <DialogTitle>Create a New Adventurer</DialogTitle>
-                <DialogDescription>
-                  Choose a name and class for your adventurer.
-                </DialogDescription>
-              </DialogHeader>
-              <div className="flex flex-col gap-6">
-                <div className="grid gap-2">
-                  <Label htmlFor="name">Name</Label>
-                  <Input
-                    id="name"
-                    value={newAdventurer.name}
-                    onChange={(e) =>
-                      setNewAdventurer({
-                        ...newAdventurer,
-                        name: e.target.value,
-                      })
-                    }
-                    placeholder="Enter character name"
-                  />
-                </div>
-                <div className="grid gap-2">
-                  <Label htmlFor="class">Class</Label>
-                  <Select
-                    value={newAdventurer.adventurerClass}
-                    onValueChange={(value) =>
-                      setNewAdventurer({
-                        ...newAdventurer,
-                        adventurerClass: value,
-                      })
-                    }
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select a class" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="WARRIOR">Warrior</SelectItem>
-                      <SelectItem value="MAGE">Mage</SelectItem>
-                      <SelectItem value="ROGUE">Rogue</SelectItem>
-                      <SelectItem value="PRIEST">Priest</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-              </div>
-              <DialogFooter>
-                <DialogClose asChild>
-                  <Button variant="secondary">Cancel</Button>
-                </DialogClose>
-
-                <Button onClick={handleCreateCharacter} type={"submit"}>
-                  Create
-                </Button>
-              </DialogFooter>
-            </DialogContent>
-          </Dialog>
-
+        <div className={"flex gap-4 justify-end"}><Button>
+          Create Adventurer
+        </Button>
           {activeAdventurer && (
-            <Button
-              className={"cursor-pointer"}
-              onClick={() =>
-                alert(`Go Westward with ${activeAdventurer.name}!`)
-              }
-            >
-              Select {activeAdventurer.name}
-            </Button>
-          )}
-        </div>
+              <Button
+                  className={"cursor-pointer"}
+                  onClick={() =>
+                      navigate("/create-adventurer")
+                  }
+              >
+                Select {activeAdventurer.name}
+              </Button>
+          )}</div>
       </CardContent>
     </Card>
   );
