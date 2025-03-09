@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Adventurer, useAdventurers } from "@/hooks/useAdventurers.ts";
+import { useAdventurers } from "@/hooks/useAdventurers.ts";
 import {
   Card,
   CardContent,
@@ -36,10 +36,8 @@ import {
 } from "@/components/ui/select.tsx";
 
 export default function AdventurerList() {
-  const { adventurers, loading, error, addAdventurer } = useAdventurers();
+  const { adventurers, loading, error, addAdventurer, activeAdventurer, setActiveAdventurer } = useAdventurers();
 
-  const [selectedAdventurer, setSelectedAdventurer] =
-    useState<Adventurer | null>(null);
 
   const [newAdventurer, setNewAdventurer] = useState({
     name: "",
@@ -109,11 +107,11 @@ export default function AdventurerList() {
               <TableRow
                 key={adventurer.id}
                 className={`cursor-pointer transition-colors ${
-                  selectedAdventurer?.id === adventurer.id
+                  activeAdventurer?.id === adventurer.id
                     ? "bg-muted"
                     : "hover:bg-muted/50"
                 }`}
-                onClick={() => setSelectedAdventurer(adventurer)}
+                onClick={() => setActiveAdventurer(adventurer)}
               >
                 <TableCell>{adventurer.name}</TableCell>
                 <TableCell>{adventurer.adventurerClass}</TableCell>
@@ -190,14 +188,14 @@ export default function AdventurerList() {
             </DialogContent>
           </Dialog>
 
-          {selectedAdventurer && (
+          {activeAdventurer && (
             <Button
               className={"cursor-pointer"}
               onClick={() =>
-                alert(`Go Westward with ${selectedAdventurer.name}!`)
+                alert(`Go Westward with ${activeAdventurer.name}!`)
               }
             >
-              Select {selectedAdventurer.name}
+              Select {activeAdventurer.name}
             </Button>
           )}
         </div>
