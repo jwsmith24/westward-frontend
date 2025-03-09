@@ -1,11 +1,5 @@
 import { useEffect, useState } from "react";
-
-export interface Adventurer {
-  id: number;
-  adventurerName: string;
-  adventurerClass: "WARRIOR" | "MAGE" | "PRIEST" | "ROGUE";
-  level: number;
-}
+import { Adventurer } from "../../types/adventurerTypes.ts";
 
 /**
  * Hook to manage the list of adventurers. Handles loading state and errors.

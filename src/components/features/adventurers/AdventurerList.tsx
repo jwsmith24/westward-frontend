@@ -16,10 +16,11 @@ import { Button } from "@/components/ui/button.tsx";
 
 import { useNavigate } from "react-router-dom";
 import { useAdventurer } from "@/context/AdventurerContext.tsx";
+import { useAdventurerList } from "@/hooks/useAdventurerList.ts";
 
 export default function AdventurerList() {
-  const { adventurers, loading, error, activeAdventurer, setActiveAdventurer } =
-    useAdventurer();
+  const { activeAdventurer, setActiveAdventurer } = useAdventurer();
+  const { loading, error, adventurers } = useAdventurerList();
   const navigate = useNavigate();
 
   if (loading)

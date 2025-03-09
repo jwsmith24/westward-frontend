@@ -1,14 +1,9 @@
-import { Adventurer, useAdventurerList } from "@/hooks/useAdventurerList.ts";
 import { createContext, ReactNode, useContext, useState } from "react";
+import { Adventurer } from "../../types/adventurerTypes.ts";
 
 type AdventurerContextProps = {
   activeAdventurer: Adventurer | null;
   setActiveAdventurer: (newAdventurer: Adventurer | null) => void;
-  adventurers: Adventurer[];
-  loading: boolean;
-  error: string | null;
-  addAdventurer: (adventurer: Adventurer) => void;
-  fetchAdventurers: () => void;
 };
 
 const AdventurerContext = createContext<AdventurerContextProps | undefined>(
@@ -18,19 +13,12 @@ export function AdventurerProvider({ children }: { children: ReactNode }) {
   const [activeAdventurer, setActiveAdventurer] = useState<Adventurer | null>(
     null,
   );
-  const { adventurers, loading, error, addAdventurer, fetchAdventurers } =
-    useAdventurerList(); // wrap API calls and related state in the context provider
 
   return (
     <AdventurerContext.Provider
       value={{
         activeAdventurer,
         setActiveAdventurer,
-        adventurers,
-        loading,
-        error,
-        addAdventurer,
-        fetchAdventurers,
       }}
     >
       {children}
