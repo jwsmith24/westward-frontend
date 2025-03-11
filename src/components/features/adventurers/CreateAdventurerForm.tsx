@@ -21,7 +21,13 @@ import {
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 
-import { useAdventurerList } from "@/hooks/useAdventurerList.ts";
+import { Dispatch, SetStateAction } from "react";
+import { Adventurer } from "../../../../types/adventurerTypes.ts";
+
+type CreateAdventurerFormProps = {
+  toggleStats: Dispatch<SetStateAction<boolean>>;
+  setInfo: (adventurer: Adventurer) => void;
+};
 
 const formSchema = z.object({
   adventurerName: z
@@ -33,7 +39,13 @@ const formSchema = z.object({
   }),
 });
 
-export function CreateAdventurerForm() {
+const PLACEHOLDER = 0;
+const STARTING_LEVEL = 1;
+
+export function CreateAdventurerForm({
+  toggleStats,
+  setInfo,
+}: CreateAdventurerFormProps) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -42,16 +54,15 @@ export function CreateAdventurerForm() {
     },
   });
 
-  const { createAdventurer, creating, createError } = useAdventurerList();
-
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    alert("submit clicked!");
-    console.log("values passed to onSubmit:", values);
-    await createAdventurer({
+    setInfo({
       adventurerName: values.adventurerName,
       adventurerClass: values.adventurerClass,
+      level: STARTING_LEVEL,
+      id: PLACEHOLDER,
     });
     form.reset();
+    toggleStats(true);
   }
 
   return (
@@ -69,11 +80,7 @@ export function CreateAdventurerForm() {
             <FormItem>
               <FormLabel>Adventurer Name</FormLabel>
               <FormControl>
-                <Input
-                  placeholder="Pick something PROVOCATIVE"
-                  {...field}
-                  className={"text-gray-400"}
-                />
+                <Input {...field} />
               </FormControl>
               <FormDescription className={"text-gray-300"}>
                 Choose a name for your character.
@@ -91,7 +98,7 @@ export function CreateAdventurerForm() {
               <Select onValueChange={field.onChange} defaultValue={field.value}>
                 <FormControl className={"cursor-pointer"}>
                   <SelectTrigger>
-                    <SelectValue placeholder={"Select a class"} />
+                    <SelectValue />
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
@@ -108,9 +115,9 @@ export function CreateAdventurerForm() {
             </FormItem>
           )}
         />
-        {createError && <p className={"text-red-500"}>{createError}</p>}
-        <Button type="submit" disabled={creating} className={"cursor-pointer"}>
-          {creating ? "Creating..." : `Create Character`}
+
+        <Button type="submit" className={"cursor-pointer"}>
+          Pick Stats
         </Button>
       </form>
     </Form>

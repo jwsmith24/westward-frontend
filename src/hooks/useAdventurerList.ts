@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Adventurer } from "../../types/adventurerTypes.ts";
+import { useAdventurer } from "@/context/AdventurerContext.tsx";
 
 /**
  * Hook to manage the list of adventurers. Handles loading state and errors.
@@ -11,6 +12,8 @@ export function useAdventurerList() {
 
   const [creating, setCreating] = useState(false);
   const [createError, setCreateError] = useState<string | null>(null);
+
+  const { setActiveAdventurer } = useAdventurer();
 
   async function fetchAdventurers() {
     setLoading(true);
@@ -52,8 +55,9 @@ export function useAdventurerList() {
           `Failed to create new adventurer: ${response.statusText}`,
         );
 
-      const newAdventurer = await response.json();
+      const newAdventurer: Adventurer = await response.json();
       addAdventurer(newAdventurer);
+      setActiveAdventurer(newAdventurer); // set latest new adventurer as active
     } catch (error) {
       setCreateError(
         error instanceof Error

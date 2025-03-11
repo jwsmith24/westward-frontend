@@ -7,9 +7,11 @@ export interface Adventurer {
 
 export interface Stats {
   id: number;
+
   // base stats
   strength: number;
   dexterity: number;
+  constitution: number;
   intelligence: number;
   wisdom: number;
   charisma: number;
