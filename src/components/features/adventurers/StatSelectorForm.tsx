@@ -47,5 +47,10 @@ export function StatSelectorForm() {
     },
   });
 
+  function onSubmit(values: z.infer<typeof formSchema>) {
+    console.log("stats submitted", values);
+    form.reset();
+  }
+
   return <div>STATS for {activeAdventurer?.adventurerName ?? "hero"}</div>;
 }

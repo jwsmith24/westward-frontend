@@ -27,6 +27,7 @@ export default function CreateAdventurerMain() {
 
   return (
     <div className="container">
+      <div>Active adventurer: {activeAdventurer?.adventurerName}</div>
       {!statSelectorActive && (
         <CreateAdventurerForm
           toggleStats={setStatSelectorActive}

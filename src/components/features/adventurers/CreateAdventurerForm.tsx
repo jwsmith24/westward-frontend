@@ -54,7 +54,7 @@ export function CreateAdventurerForm({
     },
   });
 
-  async function onSubmit(values: z.infer<typeof formSchema>) {
+  function onSubmit(values: z.infer<typeof formSchema>) {
     setInfo({
       adventurerName: values.adventurerName,
       adventurerClass: values.adventurerClass,
