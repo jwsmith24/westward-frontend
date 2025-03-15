@@ -12,6 +12,8 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { useAdventurerList } from "@/hooks/useAdventurerList.ts";
+import { useAdventurer } from "@/context/AdventurerContext.tsx";
 
 const formSchema = z.object({
   strength: z
@@ -43,6 +45,9 @@ const formSchema = z.object({
 const BASE_STAT_VALUE = 10;
 
 export function StatSelectorForm() {
+  const { createAdventurer, creating, createError } = useAdventurerList();
+  const { activeAdventurer } = useAdventurer();
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -55,11 +60,17 @@ export function StatSelectorForm() {
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log("stats submitted", values);
-  }
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    if (!activeAdventurer) return;
 
-  console.log("form state", form);
+    const newAdventurer = {
+      ...activeAdventurer,
+      stats: {
+        ...values,
+      },
+    };
+    await createAdventurer(newAdventurer);
+  }
 
   return (
     <Form {...form}>
@@ -78,8 +89,11 @@ export function StatSelectorForm() {
                 <Input
                   type="number"
                   {...field}
-                  value={field.value ?? BASE_STAT_VALUE}
-                  onChange={(e) => field.onChange(e.target.valueAsNumber)}
+                  max={17}
+                  min={0}
+                  onChange={(event) =>
+                    field.onChange(event.target.valueAsNumber)
+                  }
                 />
               </FormControl>
               <FormDescription className="text-gray-300">
@@ -101,8 +115,11 @@ export function StatSelectorForm() {
                 <Input
                   type="number"
                   {...field}
-                  value={field.value ?? BASE_STAT_VALUE}
-                  onChange={(e) => field.onChange(e.target.valueAsNumber)}
+                  max={17}
+                  min={0}
+                  onChange={(event) =>
+                    field.onChange(event.target.valueAsNumber)
+                  }
                 />
               </FormControl>
               <FormDescription className="text-gray-300">
@@ -124,8 +141,11 @@ export function StatSelectorForm() {
                 <Input
                   type="number"
                   {...field}
-                  value={field.value ?? BASE_STAT_VALUE}
-                  onChange={(e) => field.onChange(e.target.valueAsNumber)}
+                  max={17}
+                  min={0}
+                  onChange={(event) =>
+                    field.onChange(event.target.valueAsNumber)
+                  }
                 />
               </FormControl>
               <FormDescription className="text-gray-300">
@@ -147,12 +167,15 @@ export function StatSelectorForm() {
                 <Input
                   type="number"
                   {...field}
-                  value={field.value ?? BASE_STAT_VALUE}
-                  onChange={(e) => field.onChange(e.target.valueAsNumber)}
+                  max={17}
+                  min={0}
+                  onChange={(event) =>
+                    field.onChange(event.target.valueAsNumber)
+                  }
                 />
               </FormControl>
               <FormDescription className="text-gray-300">
-                Affects spellcasting power and knowledge-based skills.
+                Affects spell casting power and knowledge-based skills.
               </FormDescription>
               <FormMessage />
             </FormItem>
@@ -170,8 +193,11 @@ export function StatSelectorForm() {
                 <Input
                   type="number"
                   {...field}
-                  value={field.value ?? BASE_STAT_VALUE}
-                  onChange={(e) => field.onChange(e.target.valueAsNumber)}
+                  max={17}
+                  min={0}
+                  onChange={(event) =>
+                    field.onChange(event.target.valueAsNumber)
+                  }
                 />
               </FormControl>
               <FormDescription className="text-gray-300">
@@ -193,8 +219,11 @@ export function StatSelectorForm() {
                 <Input
                   type="number"
                   {...field}
-                  value={field.value ?? BASE_STAT_VALUE}
-                  onChange={(e) => field.onChange(e.target.valueAsNumber)}
+                  max={17}
+                  min={0}
+                  onChange={(event) =>
+                    field.onChange(event.target.valueAsNumber)
+                  }
                 />
               </FormControl>
               <FormDescription className="text-gray-300">
@@ -205,9 +234,18 @@ export function StatSelectorForm() {
           )}
         />
 
-        <Button type={"submit"} className={"cursor-pointer"}>
-          Create Adventurer
+        <Button
+          type={"submit"}
+          className={"cursor-pointer"}
+          disabled={creating}
+        >
+          {creating ? "Creating..." : "Create Adventurer"}
         </Button>
+        {createError && (
+          <div className={"mt-2 text-sm text-red-500"}>
+            Error: {createError}
+          </div>
+        )}
       </form>
     </Form>
   );

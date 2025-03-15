@@ -3,11 +3,10 @@ export interface Adventurer {
   adventurerName: string;
   adventurerClass: "WARRIOR" | "MAGE" | "PRIEST" | "ROGUE";
   level: number;
+  stats: Stats | BaseStats; // allow subset for new adventurers
 }
 
 export interface Stats {
-  id: number;
-
   // base stats
   strength: number;
   dexterity: number;
@@ -24,3 +23,13 @@ export interface Stats {
 
   armor: number;
 }
+
+export type BaseStats = Pick<
+  Stats,
+  | "strength"
+  | "dexterity"
+  | "constitution"
+  | "intelligence"
+  | "wisdom"
+  | "charisma"
+>;

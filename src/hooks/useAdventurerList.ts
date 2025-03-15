@@ -87,8 +87,6 @@ export function useAdventurerList() {
     adventurers,
     loading,
     error,
-    addAdventurer,
-    fetchAdventurers,
     createAdventurer,
     creating,
     createError,

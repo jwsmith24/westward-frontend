@@ -2,17 +2,16 @@ import { createContext, ReactNode, useContext, useState } from "react";
 import { Adventurer } from "../../types/adventurerTypes.ts";
 
 type AdventurerContextProps = {
-  activeAdventurer: Adventurer | null;
-  setActiveAdventurer: (newAdventurer: Adventurer | null) => void;
+  activeAdventurer: Partial<Adventurer> | null;
+  setActiveAdventurer: (newAdventurer: Partial<Adventurer> | null) => void;
 };
 
 const AdventurerContext = createContext<AdventurerContextProps | undefined>(
   undefined,
 );
 export function AdventurerProvider({ children }: { children: ReactNode }) {
-  const [activeAdventurer, setActiveAdventurer] = useState<Adventurer | null>(
-    null,
-  );
+  const [activeAdventurer, setActiveAdventurer] =
+    useState<Partial<Adventurer> | null>(null);
 
   return (
     <AdventurerContext.Provider

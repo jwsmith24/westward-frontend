@@ -22,11 +22,10 @@ import {
 import { Input } from "@/components/ui/input";
 
 import { Dispatch, SetStateAction } from "react";
-import { Adventurer } from "../../../../types/adventurerTypes.ts";
+import { useAdventurer } from "@/context/AdventurerContext.tsx";
 
 type CreateAdventurerFormProps = {
   toggleStats: Dispatch<SetStateAction<boolean>>;
-  setInfo: (adventurer: Adventurer) => void;
 };
 
 const formSchema = z.object({
@@ -39,12 +38,8 @@ const formSchema = z.object({
   }),
 });
 
-const PLACEHOLDER = 0;
-const STARTING_LEVEL = 1;
-
 export function CreateAdventurerForm({
   toggleStats,
-  setInfo,
 }: CreateAdventurerFormProps) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -54,12 +49,13 @@ export function CreateAdventurerForm({
     },
   });
 
+  const { activeAdventurer, setActiveAdventurer } = useAdventurer();
+
   function onSubmit(values: z.infer<typeof formSchema>) {
-    setInfo({
+    setActiveAdventurer({
+      ...activeAdventurer,
       adventurerName: values.adventurerName,
       adventurerClass: values.adventurerClass,
-      level: STARTING_LEVEL,
-      id: PLACEHOLDER,
     });
     form.reset();
     toggleStats(true);
