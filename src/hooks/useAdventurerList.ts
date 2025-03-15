@@ -28,7 +28,9 @@ export function useAdventurerList() {
       setError(null); // clear any existing error on success
     } catch (error) {
       if (error instanceof Error && error.name !== "AbortError") {
-        setError(error.message);
+        setError(
+          "Failed to retrieve adventurer list from the server. Please try again.",
+        );
       } else {
         setError("An unknown error occurred while fetching adventurers.");
       }

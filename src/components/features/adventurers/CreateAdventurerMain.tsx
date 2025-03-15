@@ -35,7 +35,7 @@ export default function CreateAdventurerMain() {
         />
       )}
 
-      {statSelectorActive && <StatSelectorForm />}
+      {statSelectorActive && activeAdventurer && <StatSelectorForm />}
     </div>
   );
 }

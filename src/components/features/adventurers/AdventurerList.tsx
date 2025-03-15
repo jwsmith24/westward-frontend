@@ -36,32 +36,39 @@ export default function AdventurerList() {
         <CardTitle className={"text-2xl"}>Character Select</CardTitle>
       </CardHeader>
       <CardContent className="grid grid-cols-1 gap-4">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Name</TableHead>
-              <TableHead>Class</TableHead>
-              <TableHead>Level</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {adventurers.map((adventurer) => (
-              <TableRow
-                key={adventurer.id}
-                className={`cursor-pointer transition-colors ${
-                  activeAdventurer?.id === adventurer.id
-                    ? "bg-muted"
-                    : "hover:bg-muted/50"
-                }`}
-                onClick={() => setActiveAdventurer(adventurer)}
-              >
-                <TableCell>{adventurer.adventurerName}</TableCell>
-                <TableCell>{adventurer.adventurerClass}</TableCell>
-                <TableCell>{adventurer.level}</TableCell>
+        {adventurers.length === 0 && (
+          <div>
+            <p>No adventurers are saved on the server. Create a new one!</p>
+          </div>
+        )}
+        {adventurers.length > 0 && (
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Name</TableHead>
+                <TableHead>Class</TableHead>
+                <TableHead>Level</TableHead>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+            </TableHeader>
+            <TableBody>
+              {adventurers.map((adventurer) => (
+                <TableRow
+                  key={adventurer.id}
+                  className={`cursor-pointer transition-colors ${
+                    activeAdventurer?.id === adventurer.id
+                      ? "bg-muted"
+                      : "hover:bg-muted/50"
+                  }`}
+                  onClick={() => setActiveAdventurer(adventurer)}
+                >
+                  <TableCell>{adventurer.adventurerName}</TableCell>
+                  <TableCell>{adventurer.adventurerClass}</TableCell>
+                  <TableCell>{adventurer.level}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        )}
 
         <div className={"flex gap-4 justify-end"}>
           <Button
