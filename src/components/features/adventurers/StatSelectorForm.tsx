@@ -14,6 +14,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useAdventurerList } from "@/hooks/useAdventurerList.ts";
 import { useAdventurer } from "@/context/AdventurerContext.tsx";
+import { useNavigate } from "react-router-dom";
 
 const formSchema = z.object({
   strength: z
@@ -47,6 +48,7 @@ const BASE_STAT_VALUE = 10;
 export function StatSelectorForm() {
   const { createAdventurer, creating, createError } = useAdventurerList();
   const { activeAdventurer } = useAdventurer();
+  const navigate = useNavigate();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -70,6 +72,8 @@ export function StatSelectorForm() {
       },
     };
     await createAdventurer(newAdventurer);
+
+    navigate("/town");
   }
 
   return (
