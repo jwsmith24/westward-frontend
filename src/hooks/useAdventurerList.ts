@@ -13,10 +13,14 @@ export function useAdventurerList() {
   const [creating, setCreating] = useState(false);
   const [createError, setCreateError] = useState<string | null>(null);
 
+  const [deleting, setDeleting] = useState(false);
+  const [deleteError, setDeleteError] = useState<string | null>(null);
+
   const { setActiveAdventurer } = useAdventurer();
 
   async function fetchAdventurers() {
     setLoading(true);
+    setError(null); // reset error state
     try {
       const response = await fetch("http://localhost:8080/api/adventurers");
 
@@ -25,7 +29,6 @@ export function useAdventurerList() {
       const data = await response.json();
       console.log("Adventurers received!", data);
       setAdventurers(data);
-      setError(null); // clear any existing error on success
     } catch (error) {
       if (error instanceof Error && error.name !== "AbortError") {
         setError(
@@ -58,7 +61,7 @@ export function useAdventurerList() {
         );
 
       const newAdventurer: Adventurer = await response.json();
-      addAdventurer(newAdventurer);
+      refreshAdventurerList();
       setActiveAdventurer(newAdventurer); // set latest new adventurer as active
     } catch (error) {
       setCreateError(
@@ -71,16 +74,47 @@ export function useAdventurerList() {
     }
   }
 
+  async function removeAdventurer(adventurer: Partial<Adventurer>) {
+    if (!adventurer.id) {
+      console.log("no id");
+      return;
+    }
+
+    console.log("deleting adventurer: ", adventurer);
+    setDeleting(true);
+    setDeleteError(null); // reset error state
+    try {
+      const response = await fetch(
+        `http://localhost:8080/api/adventurers/${adventurer.id}`,
+        {
+          method: "DELETE",
+        },
+      );
+      if (!response.ok)
+        throw new Error(
+          `Failed to delete adventurer: ${adventurer.adventurerName}`,
+        );
+    } catch (error) {
+      setDeleteError(
+        error instanceof Error
+          ? error.message
+          : `An unknown error occurred while trying to delete ${adventurer.adventurerName}`,
+      );
+    } finally {
+      setDeleting(false);
+      refreshAdventurerList();
+    }
+  }
+
   useEffect(() => {
     void fetchAdventurers();
   }, []);
 
   /**
-   * Updates the list of adventurers after one is created.
+   * Helper method to re-render the list on changes.
    */
-  function addAdventurer(newAdventurer: Adventurer) {
-    setAdventurers((prevState) => [...prevState, newAdventurer]);
-    console.log("New adventurer added!", newAdventurer);
+  function refreshAdventurerList() {
+    void fetchAdventurers();
   }
 
   return {
@@ -88,7 +122,10 @@ export function useAdventurerList() {
     loading,
     error,
     createAdventurer,
+    removeAdventurer,
     creating,
     createError,
+    deleting,
+    deleteError,
   };
 }

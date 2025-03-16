@@ -20,7 +20,8 @@ import { useAdventurerList } from "@/hooks/useAdventurerList.ts";
 
 export default function AdventurerList() {
   const { activeAdventurer, setActiveAdventurer } = useAdventurer();
-  const { loading, error, adventurers } = useAdventurerList();
+  const { loading, error, adventurers, removeAdventurer, deleting } =
+    useAdventurerList();
   const navigate = useNavigate();
 
   if (loading)
@@ -76,6 +77,7 @@ export default function AdventurerList() {
               setActiveAdventurer(null); // start fresh
               navigate("/create-adventurer"); // move to character creation view
             }}
+            className={"cursor-pointer"}
           >
             Create Adventurer
           </Button>
@@ -85,6 +87,15 @@ export default function AdventurerList() {
               onClick={() => navigate("/town")}
             >
               Select {activeAdventurer.adventurerName}
+            </Button>
+          )}
+          {activeAdventurer && (
+            <Button
+              className={"cursor-pointer hover:bg-red-400 font-bold"}
+              onClick={() => removeAdventurer(activeAdventurer)}
+            >
+              {deleting ? `Deleting ` : "Delete "}
+              {activeAdventurer.adventurerName}
             </Button>
           )}
         </div>

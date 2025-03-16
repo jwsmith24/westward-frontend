@@ -2,6 +2,21 @@
 
 @plugin "tailwindcss-animate";
 
+@font-face {
+  font-family: Garamond;
+  src: url("../src/assets/fonts/EBGaramond-Regular.ttf");
+}
+@font-face {
+  font-family: Cinzel;
+  src: url("../src/assets/fonts/Cinzel-Regular.ttf");
+}
+
+@theme {
+  --font-garamond: Garamond, "serif";
+  --font-cinzel: Cinzel, "serif";
+}
+
+
 @custom-variant dark (&:is(.dark *));
 
 :root {
